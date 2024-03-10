@@ -1,11 +1,11 @@
-
 import 'package:flutter/material.dart';
 
 class EditSavingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar( centerTitle: true,
+      appBar: AppBar(
+        centerTitle: true,
         title: Text(
           'Edit',
           style: TextStyle(fontWeight: FontWeight.bold),
@@ -52,13 +52,16 @@ class EditSavingScreen extends StatelessWidget {
                   // Save income
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Color(0xFF294B29),
+                  backgroundColor: Color(0xFF294B29),
                   minimumSize: Size(200, 60),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: Text('Update',style: TextStyle(color: Colors.white),),
+                child: Text(
+                  'Update',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ),
           ],

@@ -51,7 +51,7 @@ class AddSavingScreen extends StatelessWidget {
                   // Save income
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Color(0xFF294B29),
+                  backgroundColor: Color(0xFF294B29),
                   minimumSize: Size(200, 60),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),

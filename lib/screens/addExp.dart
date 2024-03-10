@@ -68,14 +68,15 @@ class AddExpensiveScreen extends StatelessWidget {
                       description: descriptionController.text,
                       amount: int.tryParse(costController.text) ?? 0,
                     );
-                    refreshExpenses(categoryId); // Refresh expenses after adding
+                    refreshExpenses(
+                        categoryId); // Refresh expenses after adding
                     Navigator.pop(context);
                   } catch (e) {
                     print('Failed to add expense: $e');
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Color(0xFF294B29),
+                  backgroundColor: Color(0xFF294B29),
                   minimumSize: Size(200, 60),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),

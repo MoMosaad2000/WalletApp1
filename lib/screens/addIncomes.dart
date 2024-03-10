@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gp/Models/incomeModel.dart';
 import 'package:gp/Services/addincome.dart';
 
-
 class AddIncomeScreen extends StatelessWidget {
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController costController = TextEditingController();
@@ -64,7 +63,8 @@ class AddIncomeScreen extends StatelessWidget {
 
                   try {
                     // Call the postData method to send a POST request
-                    await incomeService.postData(newIncome.title!, newIncome.cost!);
+                    await incomeService.postData(
+                        newIncome.title!, newIncome.cost!);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('Income added successfully'),
@@ -80,7 +80,7 @@ class AddIncomeScreen extends StatelessWidget {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Color(0xFF294B29),
+                  backgroundColor: Color(0xFF294B29),
                   minimumSize: Size(200, 60),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),

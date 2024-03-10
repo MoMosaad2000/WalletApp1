@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:gp/Models/expensesmodel.dart';
 import 'package:gp/Services/PostExpense.dart';
@@ -5,9 +7,11 @@ import 'package:gp/Services/deleteExp.dart';
 import 'package:gp/Services/getExpen.dart';
 import 'package:gp/screens/addExp.dart';
 import 'package:gp/screens/editExp.dart';
-import 'dart:async';
+import 'package:intl/intl.dart';
 
 class ExpensiveScreen extends StatefulWidget {
+  const ExpensiveScreen({super.key});
+
   @override
   _ExpensiveScreenState createState() => _ExpensiveScreenState();
 }
@@ -17,9 +21,12 @@ class _ExpensiveScreenState extends State<ExpensiveScreen> {
   final GetExpense _getExpenseService = GetExpense();
   final AddExpense _addExpenseService = AddExpense();
   late List<Expense> expense;
+  late List<Expense> originalExpense;
   late StreamController<Expense> _expenseController;
   int totalExpense = 0;
   String categoryId = '65e781eb708e682e7263d7fc';
+  var searchController = TextEditingController();
+  var scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -35,22 +42,24 @@ class _ExpensiveScreenState extends State<ExpensiveScreen> {
           await _getExpenseService.fetchExpenses(categoryId);
       setState(() {
         expense = fetchedExpenses;
+        originalExpense = List.from(fetchedExpenses);
       });
     } catch (e) {
       print('Error fetching expenses: $e');
+
       showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Error'),
-            content: Text(
+            title: const Text('Error'),
+            content: const Text(
                 'An error occurred while fetching expenses. Please try again later.'),
             actions: <Widget>[
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text('OK'),
+                child: const Text('OK'),
               ),
             ],
           );
@@ -67,7 +76,7 @@ class _ExpensiveScreenState extends State<ExpensiveScreen> {
     try {
       await deleteExpenseService.deleteExpense(expenseId);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Expense deleted successfully'),
         ),
       );
@@ -84,7 +93,7 @@ class _ExpensiveScreenState extends State<ExpensiveScreen> {
   int _calculateTotalExpense() {
     int total = 0;
     for (Expense exp in expense) {
-      total += exp.amount ?? 0;
+      total += exp.amount;
     }
     return total;
   }
@@ -92,62 +101,149 @@ class _ExpensiveScreenState extends State<ExpensiveScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         centerTitle: true,
-        title: Text(
+        title: const Text(
           'Food & Drink',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        leading: Icon(Icons.arrow_back, color: Colors.black),
+        leading: const Icon(Icons.arrow_back, color: Colors.black),
         actions: [
           IconButton(
-            icon: Icon(Icons.filter_alt),
+            icon: const Icon(Icons.filter_alt),
             onPressed: () {
-              showModalBottomSheet<void>(
-                context: context,
-                builder: (BuildContext context) {
-                  return SingleChildScrollView(
-                    child: Container(
-                      height: 800,
-                      padding: EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          ListTile(
-                            leading: Icon(Icons.refresh),
-                            title: Text('Reset'),
+              scaffoldKey.currentState!.showBottomSheet(
+                (context) => Container(
+                  color: Colors.white,
+                  height: 300,
+                  padding: const EdgeInsets.all(
+                    20.0,
+                  ),
+                  child: Form(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: GestureDetector(
                             onTap: () {
-                              // Reset logic
+                              setState(() {
+                                expense = List.from(originalExpense);
+                              });
+                              Navigator.pop(context);
                             },
+                            child: const Row(
+                              children: [
+                                Icon(Icons.refresh),
+                                SizedBox(width: 5),
+                                Text('Reset Data'),
+                              ],
+                            ),
                           ),
-                          ListTile(
-                            leading: Icon(Icons.sort),
-                            title: Text('Sort'),
-                            onTap: () {
-                              // Sort logic
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    expense.sort((a, b) =>
+                                        a.description.compareTo(b.description));
+                                  });
+                                  Navigator.pop(context);
+                                },
+                                child: const Row(
+                                  children: [
+                                    Icon(Icons.sort),
+                                    SizedBox(width: 5),
+                                    Text('Sort Letters'),
+                                  ],
+                                ),
+                              ),
+                              const Spacer(),
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    expense.sort(
+                                        (a, b) => a.amount.compareTo(b.amount));
+                                  });
+                                  Navigator.pop(context);
+                                },
+                                child: const Row(
+                                  children: [
+                                    Icon(Icons.sort),
+                                    SizedBox(width: 5),
+                                    Text('Sort Amount'),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        TextFormField(
+                          controller: searchController,
+                          decoration: const InputDecoration(
+                            labelText: 'Search',
+                            prefixIcon: Icon(Icons.search),
+                            border: OutlineInputBorder(),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15)),
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15)),
+                              borderSide: BorderSide(color: Colors.blue),
+                            ),
+                          ),
+                          onChanged: (value) {
+                            setState(() {
+                              expense = originalExpense
+                                  .where((exp) => exp.description
+                                      .toLowerCase()
+                                      .startsWith(value.toLowerCase()))
+                                  .toList();
+                            });
+                          },
+                        ),
+                        const SizedBox(height: 15),
+                        Container(
+                          height: 50,
+                          width: 100,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: const Color(0xFF294B29),
+                          ),
+                          child: TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
                             },
-                          ),
-                          ListTile(
-                            leading: Icon(Icons.search),
-                            title: TextField(
-                              decoration: InputDecoration(
-                                hintText: 'Search',
+                            child: const Text(
+                              'Close',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
                               ),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  );
-                },
+                  ),
+                ),
+                elevation: 20.0,
               );
             },
           ),
         ],
       ),
       body: expense.isEmpty
-          ? Center(
+          ? const Center(
               child: Text('No data available'),
             )
           : Column(
@@ -165,11 +261,16 @@ class _ExpensiveScreenState extends State<ExpensiveScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  expenses.description ?? 'No Description',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  expenses.description,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
                                 ),
+                                //Dateeeeeeeeeeeeee
                                 Text(
-                                  expenses.createdAt ?? 'No Date',
+                                  DateFormat('dd-MM-yyyy')
+                                      .format(
+                                          DateTime.parse(expenses.createdAt))
+                                      .toString(),
                                   style: TextStyle(
                                     color: Colors.grey.withOpacity(0.5),
                                     fontSize: 12,
@@ -178,8 +279,9 @@ class _ExpensiveScreenState extends State<ExpensiveScreen> {
                               ],
                             ),
                             Text(
-                              expenses.amount.toString() ?? '0',
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                              expenses.amount.toString(),
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ],
                         ),
@@ -203,17 +305,17 @@ class _ExpensiveScreenState extends State<ExpensiveScreen> {
                                   ),
                                 );
                               },
-                              child: Icon(
+                              child: const Icon(
                                 Icons.edit,
                                 color: Color(0xff19F622),
                               ),
                             ),
-                            SizedBox(width: 10),
+                            const SizedBox(width: 10),
                             InkWell(
                               onTap: () {
-                                _deleteExpense(expenses.id!, index);
+                                _deleteExpense(expenses.id, index);
                               },
-                              child: Icon(
+                              child: const Icon(
                                 Icons.delete_outline_rounded,
                                 color: Color(0xffFF0000),
                               ),
@@ -223,11 +325,11 @@ class _ExpensiveScreenState extends State<ExpensiveScreen> {
                       );
                     },
                     separatorBuilder: (BuildContext context, int index) =>
-                        Divider(),
+                        const Divider(),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 100),
+                const Padding(
+                  padding: EdgeInsets.only(top: 100),
                   child: Divider(
                     indent: 30,
                     endIndent: 30,
@@ -240,13 +342,13 @@ class _ExpensiveScreenState extends State<ExpensiveScreen> {
                     child: Container(
                       height: 40,
                       decoration: BoxDecoration(
-                        color: Color(0xFFDBE7C9),
+                        color: const Color(0xFFDBE7C9),
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Text(
+                          const Text(
                             "Total Expenses",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -254,18 +356,19 @@ class _ExpensiveScreenState extends State<ExpensiveScreen> {
                             ),
                           ),
                           Container(
-                            child: Center(
-                              child: Text(
-                                "${_calculateTotalExpense()} EGP",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(color: Colors.black),
                             ),
                             width: 90,
                             height: 30,
+                            child: Center(
+                              child: Text(
+                                "${_calculateTotalExpense()} EGP",
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
                           )
                         ],
                       ),
@@ -287,8 +390,8 @@ class _ExpensiveScreenState extends State<ExpensiveScreen> {
             _fetchExpenseData(categoryId);
           }
         },
-        backgroundColor: Color(0xFF294B29),
-        child: Icon(
+        backgroundColor: const Color(0xFF294B29),
+        child: const Icon(
           Icons.add,
           color: Colors.white,
         ),

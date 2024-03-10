@@ -1,7 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:gp/Models/expensesmodel.dart';
 import 'package:gp/Services/PutExpen.dart';
-import 'dart:async';
 
 class EditExpenseScreen extends StatefulWidget {
   final Expense expense;
@@ -105,7 +106,8 @@ class _EditExpenseScreenState extends State<EditExpenseScreen> {
                       updatedAt: widget.expense.updatedAt,
                     );
                     widget.expenseController.add(updatedExpense);
-                    widget.refreshExpenses(widget.subCategoryId); // Refresh expenses after update
+                    widget.refreshExpenses(
+                        widget.subCategoryId); // Refresh expenses after update
                     Navigator.pop(context, true);
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -116,7 +118,7 @@ class _EditExpenseScreenState extends State<EditExpenseScreen> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Color(0xFF294B29),
+                  backgroundColor: Color(0xFF294B29),
                   minimumSize: Size(200, 60),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),

@@ -30,12 +30,16 @@ class Welcome extends StatelessWidget {
                 // Navigate to login screen
               },
               style: ElevatedButton.styleFrom(
-                primary: const Color(0xFF294B29), // Background color for Login button
-                onPrimary: Colors.white, // Text color for Login button
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
+                foregroundColor: Colors.white,
+                backgroundColor:
+                    const Color(0xFF294B29), // Text color for Login button
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
-                  side: const BorderSide(width: 2, color: Color(0xFF294B29)), // Border color and width
+                  side: const BorderSide(
+                      width: 2,
+                      color: Color(0xFF294B29)), // Border color and width
                 ),
                 minimumSize: const Size(200, 0), // Fixed width
               ),
@@ -47,12 +51,15 @@ class Welcome extends StatelessWidget {
                 // Navigate to sign up screen
               },
               style: ElevatedButton.styleFrom(
-                primary: Colors.white, // Background color for Sign Up button
-                onPrimary: const Color(0xFF294B29), // Text color for Sign Up button
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
+                foregroundColor: const Color(0xFF294B29),
+                backgroundColor: Colors.white, // Text color for Sign Up button
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 13),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
-                  side: const BorderSide(width: 2, color: Color(0xFF294B29)), // Border color and width
+                  side: const BorderSide(
+                      width: 2,
+                      color: Color(0xFF294B29)), // Border color and width
                 ),
                 minimumSize: const Size(200, 0), // Fixed width
               ),

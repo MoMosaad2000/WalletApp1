@@ -1,14 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:gp/Models/incomeModel.dart';
 import 'package:gp/Services/updateIncome.dart';
-
-import 'dart:async';
 
 class EditIncomeScreen extends StatefulWidget {
   final IncomeModel income;
   final StreamController<IncomeModel> incomeController;
 
-  const EditIncomeScreen({required this.income, required this.incomeController});
+  const EditIncomeScreen(
+      {required this.income, required this.incomeController});
 
   @override
   _EditIncomeScreenState createState() => _EditIncomeScreenState();
@@ -82,7 +83,8 @@ class _EditIncomeScreenState extends State<EditIncomeScreen> {
 
                   try {
                     // Call the updateData method to send a PUT request
-                    await UpdateIncome().updateData(widget.income.sId ?? '', title, cost);
+                    await UpdateIncome()
+                        .updateData(widget.income.sId ?? '', title, cost);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text('Income updated successfully'),
@@ -103,7 +105,7 @@ class _EditIncomeScreenState extends State<EditIncomeScreen> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Color(0xFF294B29),
+                  backgroundColor: Color(0xFF294B29),
                   minimumSize: Size(200, 60),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),

@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -90,7 +91,7 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
                     alignment: Alignment.topRight,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(bottom:10.0),
+                        padding: const EdgeInsets.only(bottom: 10.0),
                         child: Image.file(
                           _imageFile,
                           width: 200,
@@ -101,7 +102,10 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
                       Visibility(
                         visible: _showDeleteIcon,
                         child: IconButton(
-                          icon: Icon(Icons.delete,color: Colors.red,),
+                          icon: Icon(
+                            Icons.delete,
+                            color: Colors.red,
+                          ),
                           onPressed: _deleteImage,
                         ),
                       ),
@@ -118,7 +122,7 @@ class _EditCategoryScreenState extends State<EditCategoryScreen> {
                   // Save income
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Color(0xFF294B29),
+                  backgroundColor: Color(0xFF294B29),
                   minimumSize: Size(200, 60),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:gp/Models/incomeModel.dart';
 import 'package:gp/Services/addincome.dart';
@@ -5,8 +7,7 @@ import 'package:gp/Services/deleteincome.dart';
 import 'package:gp/Services/income.dart';
 import 'package:gp/screens/addIncomes.dart';
 import 'package:gp/screens/editIncome.dart';
-
-import 'dart:async';
+import 'package:intl/intl.dart';
 
 class IncomesScreen extends StatefulWidget {
   @override
@@ -54,7 +55,7 @@ class _IncomesScreenState extends State<IncomesScreen> {
     try {
       await _deleteIncomeService.deleteData(incomeId);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text('Income deleted successfully'),
         ),
       );
@@ -73,14 +74,14 @@ class _IncomesScreenState extends State<IncomesScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(
+        title: const Text(
           'Incomes',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        leading: Icon(Icons.arrow_back, color: Colors.black),
+        leading: const Icon(Icons.arrow_back, color: Colors.black),
       ),
       body: incomes.isEmpty
-          ? Center(
+          ? const Center(
               child: Text('No data available'),
             )
           : StreamBuilder<IncomeModel>(
@@ -103,11 +104,14 @@ class _IncomesScreenState extends State<IncomesScreen> {
                                   children: [
                                     Text(
                                       income.title ?? '',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           fontWeight: FontWeight.bold),
                                     ),
                                     Text(
-                                      income.createdAt ?? '',
+                                      DateFormat('dd-MM-yyyy')
+                                          .format(
+                                              DateTime.parse(income.createdAt!))
+                                          .toString(),
                                       style: TextStyle(
                                         color: Colors.grey.withOpacity(0.5),
                                         fontSize: 12,
@@ -117,7 +121,8 @@ class _IncomesScreenState extends State<IncomesScreen> {
                                 ),
                                 Text(
                                   income.cost.toString() ?? '',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ],
                             ),
@@ -136,17 +141,17 @@ class _IncomesScreenState extends State<IncomesScreen> {
                                       ),
                                     );
                                   },
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.edit,
                                     color: Color(0xff19F622),
                                   ),
                                 ),
-                                SizedBox(width: 10),
+                                const SizedBox(width: 10),
                                 InkWell(
                                   onTap: () {
                                     _deleteIncome(income.sId!, index);
                                   },
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.delete_outline_rounded,
                                     color: Color(0xffFF0000),
                                   ),
@@ -156,11 +161,11 @@ class _IncomesScreenState extends State<IncomesScreen> {
                           );
                         },
                         separatorBuilder: (BuildContext context, int index) =>
-                            Divider(),
+                            const Divider(),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 100),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 100),
                       child: Divider(
                         indent: 30,
                         endIndent: 30,
@@ -173,13 +178,13 @@ class _IncomesScreenState extends State<IncomesScreen> {
                         child: Container(
                           height: 40,
                           decoration: BoxDecoration(
-                            color: Color(0xFFDBE7C9),
+                            color: const Color(0xFFDBE7C9),
                             borderRadius: BorderRadius.circular(10.0),
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              Text(
+                              const Text(
                                 "Total Incomes",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
@@ -187,19 +192,20 @@ class _IncomesScreenState extends State<IncomesScreen> {
                                 ),
                               ),
                               Container(
-                                child: Center(
-                                  child: Text(
-                                    "${_calculateTotalIncome()} EGP",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                ),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   border: Border.all(color: Colors.black),
                                 ),
-                                width: 90,
+                                width: 100,
                                 height: 30,
+                                child: Center(
+                                  child: Text(
+                                    "${_calculateTotalIncome()} EGP",
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
                               )
                             ],
                           ),
@@ -220,8 +226,8 @@ class _IncomesScreenState extends State<IncomesScreen> {
             _fetchIncomeData(); // Reload income data if a new income is added
           }
         },
-        backgroundColor: Color(0xFF294B29),
-        child: Icon(
+        backgroundColor: const Color(0xFF294B29),
+        child: const Icon(
           Icons.add,
           color: Colors.white,
         ),
