@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gp/screens/bills.dart';
 import 'package:gp/screens/expense.dart';
+import 'package:gp/screens/notification.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: ExpensiveScreen(),
+      home: NotificationScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
